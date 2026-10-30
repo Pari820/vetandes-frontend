@@ -1,0 +1,106 @@
+<div class="page-header">
+  <div>
+    <h1>🩺 Prestaciones</h1>
+    <p class="muted">
+      Catálogo de servicios veterinarios y compatibilidad por especie
+    </p>
+  </div>
+  @if(auth.tienePermiso('PRESTACION_ESCRIBIR')){<a
+    class="btn btn-primary"
+    routerLink="/prestaciones/nuevo"
+    >+ Nueva prestación</a
+  >}
+</div>
+<section class="card">
+  <div class="filtros">
+    <div class="campo flexible">
+      <label for="buscar">Buscar por código o nombre</label
+      ><input
+        id="buscar"
+        class="input"
+        placeholder="PRS-001 o vacunación"
+        [ngModel]="texto()"
+        (ngModelChange)="texto.set($event)"
+      />
+    </div>
+    <div class="campo">
+      <label for="especie">Especie aplicable</label
+      ><select
+        id="especie"
+        class="input"
+        [ngModel]="especie()"
+        (ngModelChange)="especie.set($event);cargar()"
+      >
+        <option value="">Todas</option>
+        <option value="PERRO">Perro</option>
+        <option value="GATO">Gato</option>
+        <option value="TODAS">Todas las especies</option>
+      </select>
+    </div>
+    <button class="btn" (click)="cargar()" [disabled]="cargando()">
+      Actualizar
+    </button>
+  </div>
+  @if(error()){
+  <div class="error-api" role="alert">{{error()}}</div>
+  } @if(aviso()){
+  <div class="exito" role="status">{{aviso()}}</div>
+  } @if(cargando()){
+  <p class="info">Cargando prestaciones desde Oracle...</p>
+  } @else if(filtradas().length===0){
+  <div class="busqueda-vacia">
+    No hay prestaciones para los filtros seleccionados.
+  </div>
+  } @else {
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Prestación</th>
+          <th>Precio</th>
+          <th>Especie</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(p of filtradas();track p.id){
+        <tr>
+          <td><strong>{{p.codigo}}</strong></td>
+          <td>{{p.nombre}}</td>
+          <td>S/ {{p.precio.toFixed(2)}}</td>
+          <td>{{p.especieAplicable}}</td>
+          <td>
+            <span class="badge" [class.inactivo]="!p.activo"
+              >{{p.activo?'Activa':'Inactiva'}}</span
+            >
+          </td>
+          <td>
+            <div class="acciones">
+              @if(auth.tienePermiso('PRESTACION_ESCRIBIR')){<a
+                class="btn"
+                [routerLink]="['/prestaciones',p.id,'editar']"
+                >Editar</a
+              ><button
+                class="btn"
+                [disabled]="procesando()!==null"
+                (click)="estado(p)"
+              >
+                {{p.activo?'Dar de baja':'Activar'}}</button
+              ><button
+                class="btn btn-peligro"
+                [disabled]="procesando()!==null"
+                (click)="eliminar(p)"
+              >
+                Eliminar</button
+              >} @else {<span class="muted">Solo lectura</span>}
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</section>

@@ -1,0 +1,97 @@
+<div class="page-header">
+  <div>
+    <h1>📊 Ingresos por especie</h1>
+    <p class="muted">
+      Reporte agregado en Oracle mediante consulta JPQL GROUP BY; excluye
+      atenciones anuladas.
+    </p>
+  </div>
+  <button type="button" class="btn" (click)="imprimir()">Imprimir</button>
+</div>
+<section class="card">
+  <form class="filtros no-imprimir" (ngSubmit)="cargar()">
+    <div class="campo">
+      <label for="desde">Desde</label
+      ><input
+        id="desde"
+        class="input"
+        type="date"
+        [ngModel]="desde()"
+        (ngModelChange)="desde.set($event)"
+        name="desde"
+      />
+    </div>
+    <div class="campo">
+      <label for="hasta">Hasta</label
+      ><input
+        id="hasta"
+        class="input"
+        type="date"
+        [ngModel]="hasta()"
+        (ngModelChange)="hasta.set($event)"
+        name="hasta"
+      />
+    </div>
+    <button class="btn btn-primary" type="submit" [disabled]="cargando()">
+      Consultar</button
+    ><button class="btn" type="button" (click)="limpiar()">Limpiar</button>
+  </form>
+  @if(error()){
+  <div class="error-api" role="alert">{{error()}}</div>
+  } @if(cargando()){
+  <div class="info">Consultando reporte...</div>
+  } @else if(registros().length===0){
+  <div class="busqueda-vacia">
+    No hay atenciones registradas para el período.
+  </div>
+  } @else {
+  <div class="resumen">
+    <div class="indicador">
+      <span>Atenciones válidas</span><strong>{{cantidad()}}</strong>
+    </div>
+    <div class="indicador">
+      <span>Ingresos totales</span><strong>S/ {{total().toFixed(2)}}</strong>
+    </div>
+    <div class="indicador">
+      <span>Especies registradas</span><strong>{{registros().length}}</strong>
+    </div>
+  </div>
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Especie</th>
+          <th>N.º atenciones</th>
+          <th>Importe total</th>
+          <th>Comparación</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(r of registros();track r.especie){
+        <tr>
+          <td><strong>{{r.especie}}</strong></td>
+          <td>{{r.cantidadAtenciones}}</td>
+          <td>S/ {{r.importeTotal.toFixed(2)}}</td>
+          <td>
+            <div class="barra-fondo">
+              <div
+                class="barra"
+                [style.width.%]="r.importeTotal/maximo()*100"
+              ></div>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>{{cantidad()}}</th>
+          <th>S/ {{total().toFixed(2)}}</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  }
+</section>

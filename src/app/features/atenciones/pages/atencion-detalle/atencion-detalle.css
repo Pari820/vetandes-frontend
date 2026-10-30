@@ -1,0 +1,60 @@
+.card {
+  border: 1px solid #e2e8f0;
+}
+.datos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+.datos p {
+  color: #344054;
+}
+.tabla {
+  min-width: 600px;
+}
+.totales {
+  margin-left: auto;
+  max-width: 280px;
+  margin-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 10px;
+}
+.totales p {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin: 9px 0;
+}
+.total {
+  font-size: 21px;
+  color: #0f2e5c;
+}
+.separador {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.anular {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 650px;
+}
+.anular textarea {
+  width: 100%;
+}
+.muted {
+  margin: 0 0 4px;
+  color: #64748b;
+}
+@media (max-width: 650px) {
+  .datos {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,102 @@
+<div class="page-header">
+  <h1>{{id()?'Editar mascota':'Nueva mascota'}}</h1>
+  <a class="btn" routerLink="/mascotas">← Volver</a>
+</div>
+<section class="card formulario">
+  <p class="help">
+    El propietario se carga desde Oracle. No se permiten dos mascotas con el
+    mismo nombre para un mismo propietario.
+  </p>
+  @if(error()){
+  <div class="error-api" role="alert">{{error()}}</div>
+  } @if(cargando()){
+  <div class="info">Cargando mascota...</div>
+  }@else {
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="form-grid">
+      <div class="campo">
+        <label for="nombre">Nombre *</label
+        ><input
+          id="nombre"
+          class="input"
+          formControlName="nombre"
+          maxlength="40"
+          placeholder="Firulais"
+        />@if(form.controls.nombre.touched&&form.controls.nombre.invalid){<small
+          class="error-campo"
+          >Entre 2 y 40 caracteres.</small
+        >}@if(campos()['nombre']){<small class="error-campo"
+          >{{campos()['nombre']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="especie">Especie *</label
+        ><select id="especie" class="input" formControlName="especie">
+          <option value="PERRO">Perro</option>
+          <option value="GATO">Gato</option>
+          <option value="OTRO">Otro</option></select
+        >@if(campos()['especie']){<small class="error-campo"
+          >{{campos()['especie']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="raza">Raza</label
+        ><input
+          id="raza"
+          class="input"
+          formControlName="raza"
+          maxlength="40"
+          placeholder="Mestizo"
+        />@if(campos()['raza']){<small class="error-campo"
+          >{{campos()['raza']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="fecha">Fecha de nacimiento *</label
+        ><input
+          id="fecha"
+          type="date"
+          class="input"
+          formControlName="fechaNacimiento"
+          [max]="hoy"
+        />@if(form.controls.fechaNacimiento.touched&&form.controls.fechaNacimiento.invalid){<small
+          class="error-campo"
+          >Debe ingresar la fecha.</small
+        >}@if(campos()['fechaNacimiento']){<small class="error-campo"
+          >{{campos()['fechaNacimiento']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="sexo">Sexo *</label
+        ><select id="sexo" class="input" formControlName="sexo">
+          <option value="M">Macho (M)</option>
+          <option value="H">Hembra (H)</option></select
+        >@if(campos()['sexo']){<small class="error-campo"
+          >{{campos()['sexo']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="propietario">Propietario *</label
+        ><select id="propietario" class="input" formControlName="propietarioId">
+          <option [ngValue]="0">Seleccione un propietario</option>
+          @for(p of propietarios();track p.id){
+          <option [ngValue]="p.id">{{p.nombres}} · DNI {{p.dni}}</option>
+          }</select
+        >@if(form.controls.propietarioId.touched&&form.controls.propietarioId.invalid){<small
+          class="error-campo"
+          >Seleccione un propietario.</small
+        >}@if(campos()['propietarioId']){<small class="error-campo"
+          >{{campos()['propietarioId']}}</small
+        >}
+      </div>
+    </div>
+    <div class="acciones al-final">
+      <a routerLink="/mascotas" class="btn">Cancelar</a
+      ><button class="btn btn-primary" type="submit" [disabled]="guardando()">
+        {{guardando()?'Guardando...':(id()?'Guardar cambios':'Registrar
+        mascota')}}
+      </button>
+    </div>
+  </form>
+  }
+</section>

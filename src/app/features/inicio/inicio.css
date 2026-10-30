@@ -1,0 +1,28 @@
+.bienvenida {
+  padding: 34px;
+  border: 1px solid #e0e7ef;
+}
+.intro {
+  max-width: 750px;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  color: #0b7569;
+}
+h1 {
+  font-size: 30px;
+  color: #0f2e5c;
+  margin: 12px 0;
+}
+p {
+  color: #526174;
+  line-height: 1.6;
+}
+.accesos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}

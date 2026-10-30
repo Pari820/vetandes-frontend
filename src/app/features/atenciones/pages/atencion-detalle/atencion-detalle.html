@@ -1,0 +1,105 @@
+<div class="page-header">
+  <h1>Detalle de atención</h1>
+  <a routerLink="/atenciones" class="btn">← Volver a la lista</a>
+</div>
+@if(error()){
+<div class="error-api" role="alert">{{error()}}</div>
+}@if(aviso()){
+<div class="exito">{{aviso()}}</div>
+} @if(cargando()){
+<div class="info">Cargando detalle...</div>
+} @else if(atencion();as a){
+<section class="card">
+  <div class="page-header">
+    <div>
+      <p class="muted">Atención</p>
+      <h2>{{a.numero}}</h2>
+    </div>
+    <span
+      class="badge"
+      [class.anulada]="a.estado==='ANULADA'"
+      [class.registrada]="a.estado==='REGISTRADA'"
+      >{{a.estado}}</span
+    >
+  </div>
+  <div class="datos">
+    <p><strong>Mascota:</strong> {{a.mascotaNombre}} · {{a.especie}}</p>
+    <p><strong>Propietario:</strong> {{a.propietarioNombre}}</p>
+    <p><strong>Fecha:</strong> {{a.fecha.slice(0,19).replace('T',' ')}}</p>
+    <p><strong>Peso:</strong> {{a.peso}} kg</p>
+    <p><strong>Registró:</strong> {{a.usuarioRegistro}}</p>
+    <p><strong>Diagnóstico:</strong> {{a.diagnostico||'Sin diagnóstico'}}</p>
+  </div>
+  @if(a.motivoAnulacion){
+  <div class="info">
+    <strong>Motivo de anulación:</strong> {{a.motivoAnulacion}}
+  </div>
+  }
+  <h3>Prestaciones realizadas</h3>
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Prestación</th>
+          <th>Cantidad</th>
+          <th>Precio unitario</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(d of a.detalles;track d.id){
+        <tr>
+          <td>{{d.codigo}}</td>
+          <td>{{d.prestacionNombre}}</td>
+          <td>{{d.cantidad}}</td>
+          <td>S/ {{d.precioUnitario.toFixed(2)}}</td>
+          <td>S/ {{d.subtotal.toFixed(2)}}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="totales">
+    <p>Subtotal <strong>S/ {{a.subtotal.toFixed(2)}}</strong></p>
+    <p>Descuento <strong>- S/ {{a.descuento.toFixed(2)}}</strong></p>
+    <p class="total">Total <strong>S/ {{a.total.toFixed(2)}}</strong></p>
+  </div>
+  @if(a.estado==='REGISTRADA' && auth.tienePermiso('ATENCION_ANULAR')){
+  <div class="separador">
+    <button
+      class="btn btn-peligro"
+      (click)="mostrarAnulacion.set(!mostrarAnulacion())"
+    >
+      {{mostrarAnulacion()?'Cancelar anulación':'Anular atención'}}</button
+    ><span class="help"
+      >Solo se permite durante las 48 horas posteriores al registro.</span
+    >
+  </div>
+  @if(mostrarAnulacion()){
+  <form class="anular" [formGroup]="form" (ngSubmit)="anular()">
+    <label for="motivo">Motivo de anulación (10 a 200 caracteres) *</label
+    ><textarea
+      class="input"
+      id="motivo"
+      rows="3"
+      maxlength="200"
+      formControlName="motivo"
+      placeholder="Indique por qué se anula esta atención"
+    ></textarea>
+    @if(form.controls.motivo.touched&&form.controls.motivo.invalid){<small
+      class="error-campo"
+      >El motivo debe tener de 10 a 200 caracteres.</small
+    >}@if(campos()['motivo']){<small class="error-campo"
+      >{{campos()['motivo']}}</small
+    >}<button
+      type="submit"
+      class="btn btn-peligro"
+      [disabled]="form.invalid||guardando()"
+    >
+      {{guardando()?'Anulando...':'Confirmar anulación'}}
+    </button>
+  </form>
+  }}
+</section>
+}

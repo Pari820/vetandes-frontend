@@ -1,0 +1,23 @@
+.filtros {
+  align-items: flex-end;
+}
+.filtros .campo {
+  flex: 1 1 140px;
+  min-width: 125px;
+}
+.filtros .campo:first-child {
+  flex-basis: 200px;
+}
+.tabla {
+  min-width: 920px;
+}
+.tabla td {
+  font-size: 13px;
+}
+.muted {
+  margin: 5px 0;
+  color: #64748b;
+}
+.card {
+  border: 1px solid #e1e7ef;
+}

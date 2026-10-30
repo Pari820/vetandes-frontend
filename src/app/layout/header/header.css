@@ -1,0 +1,106 @@
+/* Cabecera uniforme: el alto no depende de la página cargada. */
+:host {
+  display: block;
+  height: 64px;
+  min-height: 64px;
+  max-height: 64px;
+  min-width: 0;
+  overflow: hidden;
+}
+.header {
+  width: 100%;
+  height: 64px;
+  min-height: 64px;
+  max-height: 64px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 22px;
+  background: #0f2e5c;
+  color: white;
+  overflow: hidden;
+}
+.btn-menu {
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.marca {
+  font-weight: 800;
+  font-size: 19px;
+  color: #e7c56e;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.menubar {
+  display: flex;
+  gap: 18px;
+  margin-left: 14px;
+}
+.menubar a,
+.cuenta {
+  color: #e0eaf6;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.menubar a:hover,
+.cuenta:hover {
+  text-decoration: underline;
+}
+.usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  margin-left: auto;
+  min-width: 0;
+  line-height: 1.25;
+}
+.nombre {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.detalle {
+  font-size: 11px;
+  color: #c6d8ee;
+  white-space: nowrap;
+}
+.btn-salir {
+  border: 1px solid #9eb6d8;
+  background: transparent;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-salir:hover {
+  background: #24527d;
+}
+@media (max-width: 760px) {
+  .menubar,
+  .detalle {
+    display: none;
+  }
+  .header {
+    padding: 0 12px;
+    gap: 9px;
+  }
+  .cuenta {
+    display: none;
+  }
+  .marca {
+    font-size: 16px;
+  }
+}

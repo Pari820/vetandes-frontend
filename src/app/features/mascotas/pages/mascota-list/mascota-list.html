@@ -1,0 +1,84 @@
+<div class="page-header">
+  <div>
+    <h1>🐾 Mascotas</h1>
+    <p class="muted">Listado con edad calculada y datos del propietario</p>
+  </div>
+  @if(auth.tienePermiso('MASCOTA_ESCRIBIR')){<a
+    routerLink="/mascotas/nuevo"
+    class="btn btn-primary"
+    >+ Nueva mascota</a
+  >}
+</div>
+<section class="card">
+  <div class="filtros">
+    <div class="campo">
+      <label for="propietario">Filtrar por propietario</label
+      ><select
+        id="propietario"
+        class="input"
+        [ngModel]="propietarioId()??''"
+        (ngModelChange)="cambiarFiltro($event)"
+      >
+        <option value="">Todos los propietarios</option>
+        @for(p of propietarios();track p.id){
+        <option [value]="p.id">{{p.nombres}} · {{p.dni}}</option>
+        }
+      </select>
+    </div>
+    <button class="btn" (click)="cargar()" [disabled]="cargando()">
+      Actualizar
+    </button>
+  </div>
+  @if(error()){
+  <div class="error-api" role="alert">{{error()}}</div>
+  }@if(aviso()){
+  <div class="exito">{{aviso()}}</div>
+  } @if(cargando()){
+  <div class="info">Cargando mascotas desde el backend...</div>
+  } @else if(datos().length===0){
+  <div class="busqueda-vacia">No se encontraron mascotas.</div>
+  } @else {
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Mascota</th>
+          <th>Especie</th>
+          <th>Raza</th>
+          <th>Edad</th>
+          <th>Sexo</th>
+          <th>Propietario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(m of datos();track m.id){
+        <tr>
+          <td><strong>{{m.nombre}}</strong></td>
+          <td><span class="etiqueta-especie">{{m.especie}}</span></td>
+          <td>{{m.raza||'—'}}</td>
+          <td>{{edad(m.fechaNacimiento)}}</td>
+          <td>{{m.sexo==='M'?'Macho':'Hembra'}}</td>
+          <td>{{m.propietarioNombre}}</td>
+          <td>
+            <div class="acciones">
+              @if(auth.tienePermiso('MASCOTA_ESCRIBIR')){<a
+                class="btn"
+                [routerLink]="['/mascotas',m.id,'editar']"
+                >Editar</a
+              ><button
+                class="btn btn-peligro"
+                (click)="eliminar(m)"
+                [disabled]="procesando()"
+              >
+                Eliminar</button
+              >}@else{<span class="muted">Solo lectura</span>}
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</section>

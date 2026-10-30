@@ -1,0 +1,21 @@
+.campo select {
+  min-width: 280px;
+}
+.muted {
+  font-size: 14px;
+  margin-top: 5px;
+}
+.tabla th:last-child {
+  min-width: 170px;
+}
+.etiqueta-especie {
+  padding: 5px 10px;
+  background: #e5f4f3;
+  color: #11615a;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.card {
+  border: 1px solid #e0e6ef;
+}

@@ -1,0 +1,126 @@
+<div class="page-header">
+  <div>
+    <h1>📋 Atenciones</h1>
+    <p class="muted">Consultas veterinarias, registros y anulaciones</p>
+  </div>
+  @if(auth.tienePermiso('ATENCION_REGISTRAR')){<a
+    routerLink="/atenciones/nueva"
+    class="btn btn-primary"
+    >+ Nueva atención</a
+  >}
+</div>
+<section class="card">
+  <form class="filtros" (ngSubmit)="cargar()" #f="ngForm">
+    <div class="campo">
+      <label for="mascota">Mascota (nombre parcial)</label
+      ><input
+        id="mascota"
+        class="input"
+        name="mascota"
+        [(ngModel)]="filtros.mascota"
+        placeholder="Nombre"
+      />
+    </div>
+    <div class="campo">
+      <label for="especie">Especie</label
+      ><select
+        id="especie"
+        class="input"
+        name="especie"
+        [(ngModel)]="filtros.especie"
+      >
+        <option value="">Todas</option>
+        <option value="PERRO">Perro</option>
+        <option value="GATO">Gato</option>
+        <option value="OTRO">Otro</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="estado">Estado</label
+      ><select
+        id="estado"
+        class="input"
+        name="estado"
+        [(ngModel)]="filtros.estado"
+      >
+        <option value="">Todos</option>
+        <option value="REGISTRADA">Registrada</option>
+        <option value="ANULADA">Anulada</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="desde">Desde</label
+      ><input
+        id="desde"
+        type="date"
+        class="input"
+        name="desde"
+        [(ngModel)]="filtros.desde"
+      />
+    </div>
+    <div class="campo">
+      <label for="hasta">Hasta</label
+      ><input
+        id="hasta"
+        type="date"
+        class="input"
+        name="hasta"
+        [(ngModel)]="filtros.hasta"
+      />
+    </div>
+    <div class="acciones">
+      <button type="submit" class="btn btn-primary" [disabled]="cargando()">
+        Buscar</button
+      ><button type="button" class="btn" (click)="limpiar()">Limpiar</button>
+    </div>
+  </form>
+  @if(error()){
+  <div class="error-api" role="alert">{{error()}}</div>
+  } @if(cargando()){
+  <div class="info">Consultando atenciones...</div>
+  }@else if(filas().length===0){
+  <div class="busqueda-vacia">No hay atenciones para esos filtros.</div>
+  }@else {
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Fecha</th>
+          <th>Mascota</th>
+          <th>Propietario</th>
+          <th>Especie</th>
+          <th>Peso</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(a of filas();track a.id){
+        <tr>
+          <td><strong>{{a.numero}}</strong></td>
+          <td>{{a.fecha.slice(0,19).replace('T',' ')}}</td>
+          <td>{{a.mascotaNombre}}</td>
+          <td>{{a.propietarioNombre}}</td>
+          <td>{{a.especie}}</td>
+          <td>{{a.peso}} kg</td>
+          <td>S/ {{a.total.toFixed(2)}}</td>
+          <td>
+            <span
+              class="badge"
+              [class.anulada]="a.estado==='ANULADA'"
+              [class.registrada]="a.estado==='REGISTRADA'"
+              >{{a.estado}}</span
+            >
+          </td>
+          <td>
+            <a class="btn" [routerLink]="['/atenciones',a.id]">Ver detalle</a>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</section>

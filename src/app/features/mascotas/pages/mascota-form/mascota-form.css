@@ -1,0 +1,21 @@
+.formulario {
+  max-width: 890px;
+  border: 1px solid #e2e8f0;
+}
+.form-grid {
+  margin: 24px 0;
+}
+.al-final {
+  justify-content: flex-end;
+  border-top: 1px solid #e0e7ef;
+  padding-top: 18px;
+}
+.campo select {
+  background: white;
+}
+.campo label {
+  font-weight: 650;
+}
+.help {
+  line-height: 1.5;
+}

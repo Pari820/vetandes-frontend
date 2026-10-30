@@ -1,0 +1,23 @@
+.flexible {
+  flex: 1;
+  min-width: 240px;
+}
+.filtros select {
+  min-width: 155px;
+}
+.tabla th:last-child {
+  min-width: 270px;
+}
+.tabla td:nth-child(3) {
+  white-space: nowrap;
+}
+.muted {
+  font-size: 14px;
+  margin: 4px 0 0;
+}
+.card {
+  border: 1px solid #e0e6ef;
+}
+.btn-peligro:hover {
+  background: #fff0f0;
+}

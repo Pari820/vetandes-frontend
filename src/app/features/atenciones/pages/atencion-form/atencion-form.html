@@ -1,0 +1,245 @@
+<div class="page-header">
+  <div>
+    <h1>📋 Registrar atención</h1>
+    <p class="muted">
+      Cabecera y detalle: el backend confirma precios, descuento y total.
+    </p>
+  </div>
+  <a routerLink="/atenciones" class="btn">← Regresar</a>
+</div>
+@if(registrada();as a){
+<section class="card confirmacion" role="status">
+  <h2>✅ Atención registrada: {{a.numero}}</h2>
+  <p>
+    Se guardaron {{a.detalles.length}} prestaciones en una sola transacción.
+  </p>
+  <div class="resumen-final">
+    <span>Subtotal: S/ {{a.subtotal.toFixed(2)}}</span
+    ><span>Descuento: S/ {{a.descuento.toFixed(2)}}</span
+    ><strong>Total: S/ {{a.total.toFixed(2)}}</strong>
+  </div>
+  <div class="acciones">
+    <a [routerLink]="['/atenciones',a.id]" class="btn btn-primary"
+      >Ver atención</a
+    ><a routerLink="/atenciones" class="btn">Consultar todas</a>
+  </div>
+</section>
+} @else { @if(error()){
+<div class="error-api" role="alert">{{error()}}</div>
+} @if(cargando()){
+<div class="info">Cargando mascotas y prestaciones desde el backend...</div>
+} @else {
+<form [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+  <section class="card seccion">
+    <h2>1. Datos de la mascota</h2>
+    <div class="form-grid">
+      <div class="campo completo">
+        <label for="buscarMascota"
+          >Buscar mascota por nombre y propietario *</label
+        >
+        <div class="buscador">
+          <input
+            id="buscarMascota"
+            type="search"
+            class="input"
+            autocomplete="off"
+            placeholder="Escribe el nombre de la mascota o propietario"
+            [ngModel]="busqueda()"
+            [ngModelOptions]="{standalone:true}"
+            (ngModelChange)="busqueda.set($event);mostrarResultados.set(true)"
+            [readonly]="!!seleccionada()"
+          />
+          @if(seleccionada();as m){
+          <div class="elegida">
+            <span
+              >🐾 <strong>{{m.nombre}}</strong> · {{m.especie}} · Propietario:
+              {{m.propietarioNombre}}</span
+            ><button type="button" class="btn" (click)="quitarMascota()">
+              Cambiar
+            </button>
+          </div>
+          } @else if(mostrarResultados()){
+          <div class="resultados">
+            @for(m of buscadas();track m.id){<button
+              type="button"
+              class="opcion"
+              (click)="elegirMascota(m)"
+            >
+              <strong>{{m.nombre}}</strong
+              ><span>{{m.especie}} · {{m.propietarioNombre}}</span></button
+            >}@empty{
+            <p class="sin-resultados">No hay coincidencias.</p>
+            }
+          </div>
+          }
+        </div>
+        @if(campos()['mascotaId']){<small class="error-campo"
+          >{{campos()['mascotaId']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="peso">Peso (kg) *</label
+        ><input
+          id="peso"
+          type="number"
+          min="0.01"
+          step="0.01"
+          class="input"
+          formControlName="peso"
+          placeholder="5.50"
+        />@if(form.controls.peso.touched&&form.controls.peso.invalid){<small
+          class="error-campo"
+          >El peso debe ser mayor que cero.</small
+        >}@if(campos()['peso']){<small class="error-campo"
+          >{{campos()['peso']}}</small
+        >}
+      </div>
+      <div class="campo completo">
+        <label for="diagnostico">Diagnóstico (opcional)</label
+        ><textarea
+          id="diagnostico"
+          class="input"
+          formControlName="diagnostico"
+          rows="3"
+          maxlength="300"
+          placeholder="Observaciones de la consulta"
+        ></textarea
+        >@if(campos()['diagnostico']){<small class="error-campo"
+          >{{campos()['diagnostico']}}</small
+        >}
+      </div>
+    </div>
+  </section>
+  <section class="card seccion">
+    <div class="page-header">
+      <div>
+        <h2>2. Prestaciones</h2>
+        <p class="help">
+          De 1 a 8 prestaciones distintas; cantidades de 1 a 3. Solo se ofrecen
+          servicios activos compatibles con la especie.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="btn"
+        (click)="agregar()"
+        [disabled]="!seleccionada()||detalles.length>=8"
+      >
+        + Agregar línea
+      </button>
+    </div>
+    @if(!seleccionada()){
+    <div class="info">
+      Seleccione primero una mascota para ver las prestaciones compatibles.
+    </div>
+    } @if(seleccionada() && compatibles().length===0){
+    <div class="error-api">
+      No existen prestaciones activas para esta especie.
+    </div>
+    }
+    <div formArrayName="detalles" class="lineas">
+      @for(linea of detalles.controls;track linea;let i=$index){
+      <div class="fila-detalle" [formGroupName]="i">
+        <span class="contador">{{i+1}}</span>
+        <div class="campo prestacion">
+          <label [for]="'prestacion-'+i">Prestación *</label
+          ><select
+            class="input"
+            [id]="'prestacion-'+i"
+            formControlName="prestacionId"
+            [attr.disabled]="!seleccionada() ? '' : null"
+          >
+            <option [ngValue]="0">Seleccione prestación</option>
+            @for(p of compatibles();track p.id){
+            <option [ngValue]="p.id" [disabled]="enOtraLinea(p.id,i)">
+              {{p.codigo}} · {{p.nombre}} · S/ {{p.precio.toFixed(2)}}
+            </option>
+            }
+          </select>
+          @if(linea.get('prestacionId')?.touched &&
+          linea.get('prestacionId')?.invalid){
+          <small class="error-campo">Seleccione una prestación válida.</small>
+          } @if(campos()['detalles['+i+'].prestacionId']){
+          <small class="error-campo"
+            >{{campos()['detalles['+i+'].prestacionId']}}</small
+          >
+          }
+        </div>
+        <div class="campo cantidad">
+          <label [for]="'cantidad-'+i">Cantidad *</label
+          ><input
+            class="input"
+            [id]="'cantidad-'+i"
+            type="number"
+            min="1"
+            max="3"
+            step="1"
+            formControlName="cantidad"
+          />
+          @if(linea.get('cantidad')?.touched && linea.get('cantidad')?.invalid){
+          <small class="error-campo">Cantidad de 1 a 3.</small>
+          } @if(campos()['detalles['+i+'].cantidad']){
+          <small class="error-campo"
+            >{{campos()['detalles['+i+'].cantidad']}}</small
+          >
+          }
+        </div>
+        <div class="campo dinero">
+          <label>Subtotal</label
+          ><strong>S/ {{subtotalLinea(i).toFixed(2)}}</strong>
+        </div>
+        <button
+          type="button"
+          class="btn btn-peligro eliminar"
+          (click)="quitar(i)"
+          [disabled]="detalles.length===1"
+          [attr.aria-label]="'Quitar línea '+(i+1)"
+        >
+          Quitar
+        </button>
+      </div>
+      }
+    </div>
+    @if(repetidos()){
+    <div class="error-api">
+      No puede agregar la misma prestación más de una vez.
+    </div>
+    }@if(incompatible()){
+    <div class="error-api">
+      Existe una prestación inactiva o incompatible con la especie de la
+      mascota.
+    </div>
+    } @if(campos()['detalles']){<small class="error-campo"
+      >{{campos()['detalles']}}</small
+    >}
+    <div class="totales">
+      <p>
+        <span>Subtotal estimado</span
+        ><strong>S/ {{calculo().subtotal.toFixed(2)}}</strong>
+      </p>
+      <p class="descuento">
+        <span>Descuento ({{calculo().distintos>=3?'10 %':'0 %'}})</span
+        ><strong>- S/ {{calculo().descuento.toFixed(2)}}</strong>
+      </p>
+      <p class="total">
+        <span>Total estimado</span
+        ><strong>S/ {{calculo().total.toFixed(2)}}</strong>
+      </p>
+      <small
+        >Con 3 o más prestaciones distintas se aplica el 10 %. Los importes
+        definitivos los calcula Spring Boot.</small
+      >
+    </div>
+  </section>
+  <div class="acciones pie">
+    <a routerLink="/atenciones" class="btn">Cancelar</a
+    ><button
+      class="btn btn-primary"
+      type="submit"
+      [disabled]="enviando()||!seleccionada()||form.invalid||repetidos()||incompatible()"
+    >
+      {{enviando()?'Guardando atención...':'Registrar atención'}}
+    </button>
+  </div>
+</form>
+}}

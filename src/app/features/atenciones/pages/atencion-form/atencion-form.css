@@ -1,0 +1,163 @@
+.seccion {
+  margin-bottom: 20px;
+  border: 1px solid #e1e7f0;
+}
+.seccion h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+.muted {
+  font-size: 14px;
+  margin: 4px 0;
+}
+.buscador {
+  position: relative;
+  max-width: 770px;
+}
+.resultados {
+  position: relative;
+  max-height: 205px;
+  overflow: auto;
+  margin-top: 5px;
+  background: white;
+  border: 1px solid #ccd7e4;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px #1a376d12;
+  z-index: 3;
+}
+.opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  width: 100%;
+  padding: 10px 14px;
+  background: white;
+  border: 0;
+  border-bottom: 1px solid #e9eef5;
+  text-align: left;
+  cursor: pointer;
+}
+.opcion:hover {
+  background: #edf5ff;
+}
+.opcion span {
+  font-size: 13px;
+  color: #546579;
+}
+.sin-resultados {
+  padding: 12px;
+  color: #667085;
+}
+.elegida {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #e8f5ef;
+  padding: 9px 12px;
+  border: 1px solid #a7d9c7;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+.form-grid {
+  margin-top: 14px;
+}
+.lineas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fila-detalle {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f9fbff;
+}
+.contador {
+  font-weight: 700;
+  color: #0f2e5c;
+  background: #e3e9f3;
+  border-radius: 6px;
+  padding: 9px;
+}
+.prestacion {
+  flex: 1;
+  min-width: 170px;
+}
+.cantidad {
+  width: 95px;
+}
+.dinero {
+  width: 125px;
+}
+.dinero strong {
+  display: block;
+  min-height: 40px;
+  padding: 10px 0;
+  white-space: nowrap;
+}
+.eliminar {
+  min-height: 40px;
+}
+.totales {
+  max-width: 440px;
+  margin: 22px 0 0 auto;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #f1f6fb;
+  border: 1px solid #dfebf8;
+}
+.totales p {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 6px 0;
+}
+.totales .descuento {
+  color: #087261;
+}
+.totales .total {
+  font-size: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #d9e4f0;
+  color: #0f2e5c;
+}
+.totales small {
+  font-size: 12px;
+  color: #667085;
+}
+.pie {
+  justify-content: flex-end;
+  margin: 20px 0 40px;
+}
+.confirmacion {
+  border: 2px solid #99d5b1;
+  background: #f7fffa;
+}
+.resumen-final {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+  color: #145f38;
+}
+@media (max-width: 850px) {
+  .fila-detalle {
+    flex-wrap: wrap;
+  }
+  .prestacion {
+    flex-basis: calc(100% - 65px);
+  }
+  .dinero {
+    width: auto;
+  }
+  .opcion {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}

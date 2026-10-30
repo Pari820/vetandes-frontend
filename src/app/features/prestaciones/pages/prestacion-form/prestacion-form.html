@@ -1,0 +1,85 @@
+<div class="page-header">
+  <h1>{{id()?'Editar prestación':'Nueva prestación'}}</h1>
+  <a class="btn" routerLink="/prestaciones">← Regresar</a>
+</div>
+<section class="card formulario">
+  <p class="help">
+    Los cambios se validan en Angular y nuevamente en VetAndesBackend.
+  </p>
+  @if(cargando()){
+  <div class="info">Cargando prestación...</div>
+  } @else { @if(error()){
+  <div class="error-api" role="alert">{{error()}}</div>
+  }
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="form-grid">
+      <div class="campo">
+        <label for="codigo">Código *</label
+        ><input
+          id="codigo"
+          class="input"
+          formControlName="codigo"
+          placeholder="PRS-010"
+          maxlength="7"
+        />
+        @if(form.controls.codigo.touched && form.controls.codigo.invalid){<small
+          class="error-campo"
+          >Formato obligatorio PRS-000.</small
+        >} @if(campos()['codigo']){<small class="error-campo"
+          >{{campos()['codigo']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="especie">Especie aplicable *</label
+        ><select id="especie" class="input" formControlName="especieAplicable">
+          <option value="TODAS">Todas</option>
+          <option value="PERRO">Perro</option>
+          <option value="GATO">Gato</option></select
+        >@if(campos()['especieAplicable']){<small class="error-campo"
+          >{{campos()['especieAplicable']}}</small
+        >}
+      </div>
+      <div class="campo completo">
+        <label for="nombre">Nombre *</label
+        ><input
+          id="nombre"
+          class="input"
+          formControlName="nombre"
+          minlength="3"
+          maxlength="80"
+          placeholder="Consulta general"
+        />
+        @if(form.controls.nombre.touched&&form.controls.nombre.invalid){<small
+          class="error-campo"
+          >Debe tener entre 3 y 80 caracteres.</small
+        >} @if(campos()['nombre']){<small class="error-campo"
+          >{{campos()['nombre']}}</small
+        >}
+      </div>
+      <div class="campo">
+        <label for="precio">Precio S/ *</label
+        ><input
+          id="precio"
+          type="number"
+          class="input"
+          formControlName="precio"
+          min="0.01"
+          step="0.01"
+        />@if(form.controls.precio.touched&&form.controls.precio.invalid){<small
+          class="error-campo"
+          >El precio debe ser mayor que cero.</small
+        >}@if(campos()['precio']){<small class="error-campo"
+          >{{campos()['precio']}}</small
+        >}
+      </div>
+    </div>
+    <div class="acciones al-final">
+      <a routerLink="/prestaciones" class="btn">Cancelar</a
+      ><button class="btn btn-primary" type="submit" [disabled]="guardando()">
+        {{guardando()?'Guardando...':(id()?'Guardar cambios':'Registrar
+        prestación')}}
+      </button>
+    </div>
+  </form>
+  }
+</section>

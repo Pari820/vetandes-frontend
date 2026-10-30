@@ -1,0 +1,17 @@
+VETANDES FRONTEND - RESULTADOS DE VALIDACIÓN
+
+Base del proyecto: PharmaFrontend original suministrado por el usuario.
+Dominio nuevo: VetAndes, examen LP II Versión B.
+Archivos CSS reales: 16 (todos con más de 100 caracteres).
+Estructura core/shared/layout/features: OK.
+Angular JSON proyecto: vetandes-frontend OK.
+Build targets serve: vetandes-frontend OK.
+No quedan nombres de PharmaSoft ni de permisos de farmacia en src: OK.
+Compilación TypeScript (tsc --noEmit -p tsconfig.app.json): OK.
+Compilación Angular AOT (ngc --noEmit -p tsconfig.app.json): OK.
+Compilación ng build completa: NO COMPLETADA aquí; Node local 22.16 no satisface
+la versión mínima del Angular CLI extraído (22.22.3), y la instalación
+proveniente del ZIP de Windows contiene binario esbuild para Windows, no Linux.
+La integración HTTP en el PC del estudiante aún debe comprobarse con
+VetAndesBackend y Oracle.
+No se incluyen node_modules, .angular, dist ni .git.
