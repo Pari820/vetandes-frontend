@@ -34,3 +34,4 @@ Captura: login, CRUD de prestación, CRUD de mascota con propietario, registro d
 ## Qué explicar en la defensa
 
 El recorrido de una atención comienza en `AtencionForm` → `AtencionService` → interceptor de autenticación → `AtencionController` → `AtencionServiceImpl` (`@Transactional`) → repositorios JPA → Oracle. El backend consulta precios y calcula la operación; Angular solamente anticipa el monto en pantalla. `authGuard` revisa la sesión, `permisoGuard` protege las rutas y Spring Security vuelve a verificar cada permiso con `hasAuthority`. `errorInterceptor` distingue 401 (credenciales inválidas o sesión vencida) y 403 (usuario autenticado sin permiso) sin cerrar sesión ante 403. `sessionStorage` dura mientras existe la pestaña y contiene el vencimiento del JWT.
+Validaciones finales: Angular build exitoso, reporte por especie y acceso denegado verificados. 
